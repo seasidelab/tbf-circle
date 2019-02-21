@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="assets/css/default.css">
+		<script src="assets/js/jquery-3.3.1.min.js"></script>
+		<script src="assets/js/dataattr.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/safestorage.js"></script>
+		<script src="assets/js/jsonstorage.js"></script>
+		<script src="assets/js/jsonreader.js"></script>
+		<script src="assets/js/lazyload.js"></script>
+		<script src="assets/js/techbookfest.js"></script>
+		<script src="assets/js/circle.js"></script>
+		<script>
+var setting = {};
+setting.number          = 6;	// 開催回数
+setting.titleText       = TechBookFest.getName(setting.number) + ' | サークルチェッカー';
+setting.limit           = 1000;
+setting.loadingImageUrl = 'assets/img/loading.gif';
+setting.storageKey      = 'circle';
+
+$(function () {
+	StateController.run();
+});
+		</script>
+	</head>
+	<body>
+		<h1></h1>
+		<section data-state="begin">
+			<h2>使い方</h2>
+			<ol>
+				<li data-circle-data="link">下記 URL から JSON ファイルをダウンロード (名前を付けてリンク先を保存) してください。<br></li>
+				<li>ダウンロードした JSON ファイルをこのページにドラッグ＆ドロップしてください。</li>
+			</ol>
+		</section>
+		<section data-state="loading">
+			<h2>読み込み中・・・</h2>
+		</section>
+		<section data-state="success">
+			<h2>検索</h2>
+			<p><label>🔎<input type="search" placeholder="ジャンル詳細" data-circle-search></label></p>
+			<h2>サークルリスト (<span data-circle-list="count"></span>)</h2>
+			<table data-circle-list="table">
+				<thead>
+					<tr>
+						<th>サークルカット</th>
+						<th>配置</th>
+						<th>サークル名</th>
+						<th>ペンネーム</th>
+						<th>ジャンル</th>
+						<th>ジャンル詳細</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+			<p><input type="button" value="キャッシュ削除" data-circle-data="clear"></p>
+		</section>
+		<section data-state="failure">
+			<h2>エラー</h2>
+			<p id="error_message"></p>
+		</section>
+		<div data-circle-cut-zoom="view"></div>
+		<footer>
+			<p>Powered by <a href="https://github.com/seasidelab/tbf-circle">GitHub</a></p>
+		</footer>
+	</body>
+</html>

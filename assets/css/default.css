@@ -1,0 +1,75 @@
+*
+{
+	box-sizing: border-box;
+	font-family: Meiryo, sans-serif;
+}
+
+html
+{
+	height: 100%;
+}
+
+table
+{
+	border-collapse: collapse;
+}
+
+th, td
+{
+	border: 1px solid silver;
+}
+
+th
+{
+	background-color: #4caf50;
+	color: white;
+	font-weight: normal;
+}
+
+.loading
+{
+	cursor: wait;
+}
+
+[data-state]
+{
+	display: none;
+}
+
+[data-circle-cut-zoom="src"]
+{
+	max-width: 7rem;
+	height: 10rem;
+	vertical-align: top;
+	cursor: zoom-in;
+}
+
+[data-circle-cut-zoom="view"]
+{
+	position: fixed;
+	right: 0;
+	top: 0;
+	height: 100%;
+}
+
+[data-circle-cut-zoom="view"] img
+{
+	height: 100%;
+}
+
+#error_message
+{
+	font-weight: bold;
+	color: red;
+}
+
+.space
+{
+	display: inline-block;
+	padding: 0.1rem 0.4rem;
+	border-radius: 0.8rem;
+	white-space: nowrap;
+	text-decoration: none;
+	background-color: #4caf50;
+	color: white;
+}
