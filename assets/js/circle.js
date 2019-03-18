@@ -117,29 +117,45 @@ var CircleList = (function () {
 
 	self.prototype.addData = function (data)
 	{
-		var circleCut = ('circleCutImage' in data) ? this.lazyLoad.createImage(setting.loadingImageUrl, data.circleCutImage.url).attr('data-circle-cut-zoom', 'src') : 'N/A';
-
-		var space = Util.createExternalLink(TechBookFest.getCircleUrl(data.event.id, data.id)).addClass('space').text(data.spaces.join('/'));
-
-		var name = $('<ruby></ruby>').text(data.name);
-		var nameRuby = $('<rt></rt>').text(data.nameRuby);
-		name.append(nameRuby);
-		if ('webSiteURL' in data)
-		{
-			name = Util.createExternalLink(data.webSiteURL).append(name);
-		}
-
 		this.addRow
 		(
 			[
-				circleCut,
-				space,
-				name,
+				this.createCircleCut(data),
+				this.createCircleSpace(data),
+				this.createCircleName(data),
 				data.penName,
 				data.genre,
 				data.genreFreeFormat
 			]
 		);
+	};
+
+	self.prototype.createCircleCut = function (data)
+	{
+		if (!('circleCutImage' in data))
+		{
+			// サークルカットなし
+			return 'N/A';
+		}
+		return this.lazyLoad.createImage(setting.loadingImageUrl, data.circleCutImage.url).attr('data-circle-cut-zoom', 'src');
+	};
+
+	self.prototype.createCircleSpace = function (data)
+	{
+		return Util.createExternalLink(TechBookFest.getCircleUrl(data.event.id, data.id)).addClass('space').text(data.spaces.join('/'));
+	};
+
+	self.prototype.createCircleName = function (data)
+	{
+		var name = $('<ruby></ruby>').text(data.name);
+		var rt = $('<rt></rt>').text(data.nameRuby);
+		name.append(rt);
+		// Web サイトがあればリンクする
+		if ('webSiteURL' in data)
+		{
+			name = Util.createExternalLink(data.webSiteURL).append(name);
+		}
+		return name;
 	};
 
 	self.prototype.addRow = function (row)
