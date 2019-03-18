@@ -211,22 +211,17 @@ var CircleSearch = (function () {
 
 	self.dataAttr = new DataAttr('circle-search');
 
-	self.prototype.getKeyword = function ()
-	{
-		return this.input.val();
-	};
-
-	self.prototype.filter = function (keyword, colNum)
+	self.prototype.filter = function (keyword)
 	{
 		this.circleList.filter(function (tr) {
-			var td = tr.find('td').eq(colNum);
-			return Util.partialMatch(td.text(), keyword);
+			var tds = tr.find('td');
+			return Util.partialMatch(tds.eq(CircleList.COL_NUM_DETAIL).text(), keyword);
 		});
 	};
 
 	self.prototype.update = function ()
 	{
-		this.filter(this.getKeyword(), CircleList.COL_NUM_DETAIL);
+		this.filter(this.input.val());
 	};
 
 	return self;
