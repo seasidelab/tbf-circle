@@ -4,6 +4,12 @@ var CircleData = (function () {
 	{
 		this.jsonStorage = new JSONStorage(setting.storageKey);
 
+		// クリアボタンの取得と状態更新
+		this.clearButton = self.dataAttr.find('clear').click(function () {
+			this.clear();
+		}.bind(this));
+		this.updateClearButton();
+
 		// ダウンロードリンク追加
 		var jsonUrl = TechBookFest.getJSONUrl(setting.number, setting.limit);
 		var anchor = Util.createExternalLink(jsonUrl).text(jsonUrl);
@@ -29,6 +35,7 @@ var CircleData = (function () {
 		JSONReader.read(dataTransfer)
 		.done(function (data) {
 			this.jsonStorage.set(data);
+			this.updateClearButton();
 			deferred.resolve(data);
 		}.bind(this))
 		.fail(function (errorMessage) {
@@ -41,11 +48,17 @@ var CircleData = (function () {
 	self.prototype.clear = function ()
 	{
 		this.jsonStorage.clear();
+		this.updateClearButton();
+	};
+
+	self.prototype.updateClearButton = function ()
+	{
+		this.clearButton.toggle(this.exists());
 	};
 
 	self.prototype.getClearButton = function ()
 	{
-		return self.dataAttr.find('clear');
+		return this.clearButton;
 	};
 
 	return self;
@@ -235,18 +248,9 @@ var StateController = (function () {
 		this.circleList = new CircleList();
 		this.circleSearch = new CircleSearch(this.circleList);
 
-		var button = this.circleData.getClearButton();
-		if (SafeStorage.enabled)
-		{
-			button.click(function () {
-				this.circleData.clear();
-				this.changeState('begin');
-			}.bind(this));
-		}
-		else
-		{
-			button.hide();
-		}
+		this.circleData.getClearButton().click(function () {
+			this.changeState('begin');
+		}.bind(this));
 	};
 
 	self.dataAttr = new DataAttr('state');
