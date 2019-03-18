@@ -1,6 +1,7 @@
 // サークルデータ関連
 var CircleData = (function () {
-	var self = function () {
+	var self = function ()
+	{
 		this.jsonStorage = new JSONStorage(setting.storageKey);
 
 		// ダウンロードリンク追加
@@ -165,7 +166,7 @@ var CircleList = (function () {
 
 		row.forEach(function (column) {
 			var td = $('<td></td>');
-			$.type(column) === 'string' ? td.text(column) : td.append(column);
+			Util.isString(column) ? td.text(column) : td.append(column);
 			tr.append(td);
 		});
 	};

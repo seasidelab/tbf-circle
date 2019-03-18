@@ -3,6 +3,11 @@ var Util = (function () {
 	{
 	};
 
+	self.isString = function (string)
+	{
+		return $.type(string) === 'string';
+	};
+
 	self.upperCaseFirst = function (string)
 	{
 		return string.replace(/^./, function (char) {
@@ -12,7 +17,7 @@ var Util = (function () {
 
 	self.zeroPadding = function (string, length)
 	{
-		if ($.type(string) !== 'string')
+		if (!self.isString(string))
 		{
 			string = string.toString();
 		}
