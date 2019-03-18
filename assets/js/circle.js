@@ -1,5 +1,5 @@
-// サークルデータ関連
-var CircleData = (function () {
+// サークルリスト
+var CircleList = (function () {
 	var self = function ()
 	{
 		this.jsonStorage = new JSONStorage(setting.storageKey);
@@ -16,7 +16,7 @@ var CircleData = (function () {
 		self.dataAttr.find('link').append(anchor);
 	};
 
-	self.dataAttr = new DataAttr('circle-data');
+	self.dataAttr = new DataAttr('circle-list');
 
 	self.prototype.exists = function ()
 	{
@@ -100,8 +100,8 @@ var ImageZoom = (function () {
 	return self;
 }());
 
-// サークルリスト
-var CircleList = (function () {
+// サークルリスト表示
+var CircleListView = (function () {
 	var self = function ()
 	{
 		this.tbody = self.dataAttr.find('table').find('tbody');
@@ -112,7 +112,7 @@ var CircleList = (function () {
 
 	self.COL_NUM_DETAIL = 5;
 
-	self.dataAttr = new DataAttr('circle-list');
+	self.dataAttr = new DataAttr('circle-list-view');
 
 	self.prototype.load = function (circle)
 	{
@@ -208,15 +208,15 @@ var CircleList = (function () {
 	return self;
 }());
 
-// ジャンル詳細検索
+// サークル検索
 var CircleSearch = (function () {
-	var self = function (circleList)
+	var self = function (circleListView)
 	{
-		this.circleList = circleList;
+		this.circleListView = circleListView;
 
 		this.input = self.dataAttr.find();
 		this.input.on('input', function () {
-			this.update();
+			this.execute();
 		}.bind(this));
 	};
 
@@ -224,13 +224,13 @@ var CircleSearch = (function () {
 
 	self.prototype.filter = function (keyword)
 	{
-		this.circleList.filter(function (tr) {
+		this.circleListView.filter(function (tr) {
 			var tds = tr.find('td');
-			return Util.partialMatch(tds.eq(CircleList.COL_NUM_DETAIL).text(), keyword);
+			return Util.partialMatch(tds.eq(CircleListView.COL_NUM_DETAIL).text(), keyword);
 		});
 	};
 
-	self.prototype.update = function ()
+	self.prototype.execute = function ()
 	{
 		this.filter(this.input.val());
 	};
@@ -242,11 +242,11 @@ var CircleSearch = (function () {
 var StateController = (function () {
 	var self = function ()
 	{
-		this.circleData = new CircleData();
 		this.circleList = new CircleList();
-		this.circleSearch = new CircleSearch(this.circleList);
+		this.circleListView = new CircleListView();
+		this.circleSearch = new CircleSearch(this.circleListView);
 
-		this.circleData.getClearButton().click(function () {
+		this.circleList.getClearButton().click(function () {
 			this.changeState('begin');
 		}.bind(this));
 	};
@@ -294,16 +294,16 @@ var StateController = (function () {
 	self.prototype.stateBegin = function ()
 	{
 		// キャッシュ済みかチェック
-		if (this.circleData.exists())
+		if (this.circleList.exists())
 		{
-			this.changeState('success', this.circleData.get());
+			this.changeState('success', this.circleList.get());
 		}
 	};
 
 	self.prototype.stateLoading = function (dataTransfer)
 	{
 		$('html').addClass('loading');	// ロード中カーソル設定
-		this.circleData.load(dataTransfer)
+		this.circleList.load(dataTransfer)
 		.done(function (circle) {
 			this.changeState('success', circle);
 		}.bind(this))
@@ -317,8 +317,8 @@ var StateController = (function () {
 
 	self.prototype.stateSuccess = function (circle)
 	{
-		this.circleList.load(circle);
-		this.circleSearch.update();
+		this.circleListView.load(circle);
+		this.circleSearch.execute();
 	};
 
 	self.prototype.stateFailure = function (errorMessage)

@@ -31,7 +31,7 @@ $(function () {
 		<section data-state="begin">
 			<h2>使い方</h2>
 			<ol>
-				<li data-circle-data="link">下記 URL から JSON ファイルをダウンロード (名前を付けてリンク先を保存) してください。<br></li>
+				<li data-circle-list="link">下記 URL から JSON ファイルをダウンロード (名前を付けてリンク先を保存) してください。<br></li>
 				<li>ダウンロードした JSON ファイルをこのページにドラッグ＆ドロップしてください。</li>
 			</ol>
 		</section>
@@ -41,8 +41,8 @@ $(function () {
 		<section data-state="success">
 			<h2>検索</h2>
 			<p><label>🔎<input type="search" placeholder="ジャンル詳細" data-circle-search></label></p>
-			<h2>サークルリスト (<span data-circle-list="count"></span>)</h2>
-			<table data-circle-list="table">
+			<h2>サークルリスト (<span data-circle-list-view="count"></span>)</h2>
+			<table data-circle-list-view="table">
 				<thead>
 					<tr>
 						<th>サークルカット</th>
@@ -61,7 +61,7 @@ $(function () {
 			<p id="error_message"></p>
 		</section>
 		<div>
-			<input type="button" value="サークルリスト削除" data-circle-data="clear">
+			<input type="button" value="サークルリスト削除" data-circle-list="clear">
 		</div>
 		<div data-image-zoom></div>
 		<footer>
