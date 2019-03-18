@@ -64,22 +64,20 @@ var CircleData = (function () {
 	return self;
 }());
 
-// サークルカットズーム表示
-var CircleCutZoom = (function () {
+// 画像拡大表示
+var ImageZoom = (function () {
 	var self = function ()
 	{
-		this.element = self.dataAttr.find('view');
+		this.element = self.dataAttr.find();
 		this.hide();
 	};
 
-	self.dataAttr = new DataAttr('circle-cut-zoom');
+	self.dataAttr = new DataAttr('image-zoom');
 
 	self.prototype.show = function (srcImage)
 	{
 		var destImage = $('<img />').attr('src', srcImage.attr('src'));
-		this.element
-		.append(destImage)
-		.show();
+		this.element.append(destImage).show();
 	};
 
 	self.prototype.hide = function ()
@@ -87,9 +85,9 @@ var CircleCutZoom = (function () {
 		this.element.hide().empty();
 	};
 
-	self.prototype.update = function ()
+	self.prototype.set = function (selector)
 	{
-		self.dataAttr.find('src')
+		$(selector)
 		.mouseover(function (event) {
 			var srcImage = $(event.currentTarget);
 			this.show(srcImage);
@@ -109,7 +107,7 @@ var CircleList = (function () {
 		this.tbody = self.dataAttr.find('table').find('tbody');
 		this.countElement = self.dataAttr.find('count');
 		this.lazyLoad = new LazyLoad();
-		this.circleCutZoom = new CircleCutZoom();
+		this.imageZoom = new ImageZoom();
 	};
 
 	self.COL_NUM_DETAIL = 5;
@@ -126,7 +124,7 @@ var CircleList = (function () {
 		}.bind(this));
 
 		this.update(circle.list.length);
-		this.circleCutZoom.update();
+		this.imageZoom.set('.circle_cut');
 	};
 
 	self.prototype.addData = function (data)
@@ -151,12 +149,12 @@ var CircleList = (function () {
 			// サークルカットなし
 			return 'N/A';
 		}
-		return this.lazyLoad.createImage(setting.loadingImageUrl, data.circleCutImage.url).attr('data-circle-cut-zoom', 'src');
+		return this.lazyLoad.createImage(setting.loadingImageUrl, data.circleCutImage.url).addClass('circle_cut');
 	};
 
 	self.prototype.createCircleSpace = function (data)
 	{
-		return Util.createExternalLink(TechBookFest.getCircleUrl(data.event.id, data.id)).addClass('space').text(data.spaces.join('/'));
+		return Util.createExternalLink(TechBookFest.getCircleUrl(data.event.id, data.id)).addClass('circle_space').text(data.spaces.join('/'));
 	};
 
 	self.prototype.createCircleName = function (data)

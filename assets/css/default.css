@@ -36,15 +36,7 @@ th
 	display: none;
 }
 
-[data-circle-cut-zoom="src"]
-{
-	max-width: 7rem;
-	height: 10rem;
-	vertical-align: top;
-	cursor: zoom-in;
-}
-
-[data-circle-cut-zoom="view"]
+[data-image-zoom]
 {
 	position: fixed;
 	right: 0;
@@ -52,7 +44,7 @@ th
 	height: 100%;
 }
 
-[data-circle-cut-zoom="view"] img
+[data-image-zoom] img
 {
 	height: 100%;
 }
@@ -63,7 +55,15 @@ th
 	color: red;
 }
 
-.space
+.circle_cut
+{
+	max-width: 7rem;
+	height: 10rem;
+	vertical-align: top;
+	cursor: zoom-in;
+}
+
+.circle_space
 {
 	display: inline-block;
 	padding: 0.1rem 0.4rem;
