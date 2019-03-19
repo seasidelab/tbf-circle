@@ -10,10 +10,10 @@ var LazyLoad = (function () {
 		this.window = $(window);
 		this.window
 		.scroll(function () {
-			this.update();
+			this.notifyRegionChange();
 		}.bind(this))
 		.resize(function () {
-			this.update();
+			this.notifyRegionChange();
 		}.bind(this));
 	};
 
@@ -24,7 +24,7 @@ var LazyLoad = (function () {
 		return $('<img />').attr('src', src).attr(this.attributeName, originalSrc);
 	};
 
-	self.prototype.update = function ()
+	self.prototype.notifyRegionChange = function ()
 	{
 		// ウィンドウ範囲
 		var windowTop    = this.window.scrollTop();
@@ -51,11 +51,11 @@ var LazyLoad = (function () {
 			this.loadingCount++;
 			img.on('load', function () {
 				this.loadingCount--;
-				// 本来の画像に切り替わった後にレイアウトが変化する可能性があるので再検出を行う
+				// 画像切り替えでレイアウトが変化する可能性があるので再検出を行う
 				// 再検出は重い処理なので一連の画像読み込みが全て完了したタイミングに限定する
 				if (this.loadingCount === 0)
 				{
-					this.update();
+					this.notifyRegionChange();
 				}
 			}.bind(this)).attr('src', img.attr(this.attributeName)).removeAttr(this.attributeName);
 		}.bind(this));

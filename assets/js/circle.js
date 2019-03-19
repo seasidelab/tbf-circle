@@ -112,8 +112,8 @@ var CircleListView = (function () {
 			this.addData(data);
 		}.bind(this));
 
-		this.update(circle.list.length);
 		this.imageZoom.set('.circle_cut');
+		this.update(circle.list.length);
 	};
 
 	self.prototype.addData = function (data)
@@ -173,8 +173,10 @@ var CircleListView = (function () {
 
 	self.prototype.update = function (count)
 	{
+		// 表示件数更新
 		this.countElement.text(count);
-		this.lazyLoad.update();
+		// 表示内容変更を通知
+		this.lazyLoad.notifyRegionChange();
 	};
 
 	self.prototype.filter = function (callback)
