@@ -28,21 +28,10 @@ var CircleList = (function () {
 		return this.jsonStorage.get();
 	};
 
-	self.prototype.load = function (dataTransfer)
+	self.prototype.set = function (data)
 	{
-		var deferred = $.Deferred();
-
-		JSONReader.read(dataTransfer)
-		.done(function (data) {
-			this.jsonStorage.set(data);
-			this.updateClearButton();
-			deferred.resolve(data);
-		}.bind(this))
-		.fail(function (errorMessage) {
-			deferred.reject(errorMessage);
-		}.bind(this));
-
-		return deferred.promise();
+		this.jsonStorage.set(data);
+		this.updateClearButton();
 	};
 
 	self.prototype.clear = function ()
@@ -303,8 +292,9 @@ var StateController = (function () {
 	self.prototype.stateLoading = function (dataTransfer)
 	{
 		$('html').addClass('loading');	// ロード中カーソル設定
-		this.circleList.load(dataTransfer)
+		JSONReader.read(dataTransfer)
 		.done(function (circle) {
+			this.circleList.set(circle);
 			this.changeState('success', circle);
 		}.bind(this))
 		.fail(function (errorMessage) {
