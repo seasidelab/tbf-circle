@@ -19,7 +19,7 @@ setting.number          = 6;	// 開催回数
 setting.titleText       = TechBookFest.getName(setting.number) + ' | サークルチェッカー';
 setting.limit           = 1000;
 setting.loadingImageUrl = 'assets/img/loading.gif';
-setting.storageKey      = 'circle';
+setting.storageKeys     = {'circle': 'circle', 'star': 'star'};
 
 $(function () {
 	StateController.run();
@@ -45,6 +45,7 @@ $(function () {
 			<table data-circle-list-view="table">
 				<thead>
 					<tr>
+						<th></th>
 						<th>サークルカット</th>
 						<th>配置</th>
 						<th>サークル名</th>
@@ -61,7 +62,8 @@ $(function () {
 			<p id="error_message"></p>
 		</section>
 		<div>
-			<input type="button" value="サークルリスト削除" data-circle-list="clear">
+			<input type="button" value="JSON キャッシュ削除" data-circle-list="clear">
+			<input type="button" value="スター削除" data-star-list="clear">
 		</div>
 		<div data-image-zoom></div>
 		<footer>

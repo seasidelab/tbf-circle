@@ -2,7 +2,7 @@
 var CircleList = (function () {
 	var self = function ()
 	{
-		this.jsonStorage = new JSONStorage(setting.storageKey);
+		this.jsonStorage = new JSONStorage(setting.storageKeys.circle);
 
 		// クリアボタンの取得と状態更新
 		this.clearButton = self.dataAttr.find('clear').click(function () {
@@ -53,6 +53,75 @@ var CircleList = (function () {
 	return self;
 }());
 
+// スター
+var StarList = (function () {
+	var self = function ()
+	{
+		this.jsonStorage = new JSONStorage(setting.storageKeys.star);
+		this.circleIds = this.jsonStorage.exists() ? this.jsonStorage.get() : {};
+
+		// クリアボタンの取得と状態更新
+		this.clearButton = self.dataAttr.find('clear').click(function () {
+			this.clear();
+		}.bind(this));
+		this.updateClearButton();
+	};
+
+	self.dataAttr = new DataAttr('star-list');
+
+	self.prototype.size = function ()
+	{
+		return Object.keys(this.circleIds).length;
+	};
+
+	self.prototype.exists = function (circleId)
+	{
+		return circleId in this.circleIds;
+	};
+
+	self.prototype.add = function (circleId)
+	{
+		this.circleIds[circleId] = circleId;
+		this.jsonStorage.set(this.circleIds);
+		this.updateClearButton();
+	};
+
+	self.prototype.remove = function (circleId)
+	{
+		delete this.circleIds[circleId];
+		this.jsonStorage.set(this.circleIds);
+		// 0 件になったら全て削除
+		if (this.size() === 0)
+		{
+			this.clear();
+		}
+	};
+
+	self.prototype.clear = function ()
+	{
+		this.circleIds = {};
+		this.jsonStorage.clear();
+		this.updateClearButton();
+	};
+
+	self.prototype.toggle = function (addOrRemove, circleId)
+	{
+		addOrRemove ? this.add(circleId) : this.remove(circleId);
+	};
+
+	self.prototype.updateClearButton = function ()
+	{
+		this.clearButton.toggle(this.jsonStorage.exists());
+	};
+
+	self.prototype.getClearButton = function ()
+	{
+		return this.clearButton;
+	};
+
+	return self;
+}());
+
 // 画像拡大表示
 var ImageZoom = (function () {
 	var self = function ()
@@ -91,15 +160,16 @@ var ImageZoom = (function () {
 
 // サークルリスト表示
 var CircleListView = (function () {
-	var self = function ()
+	var self = function (starList)
 	{
 		this.tbody = self.dataAttr.find('table').find('tbody');
 		this.countElement = self.dataAttr.find('count');
 		this.lazyLoad = new LazyLoad();
 		this.imageZoom = new ImageZoom();
+		this.starList = starList;
 	};
 
-	self.COL_NUM_DETAIL = 5;
+	self.COL_NUM_DETAIL = 6;
 
 	self.dataAttr = new DataAttr('circle-list-view');
 
@@ -145,6 +215,11 @@ var CircleListView = (function () {
 		this.update(visibleCount);
 	};
 
+	self.prototype.clearStars = function ()
+	{
+		this.tbody.find('.circle_star input[type="checkbox"]').prop('checked', false);
+	};
+
 	self.prototype.load = function (circle)
 	{
 		// 再ドラッグ時に古いものが残らないよう空にしておく
@@ -163,6 +238,7 @@ var CircleListView = (function () {
 		this.add
 		(
 			[
+				this.createCircleStar(data),
 				this.createCircleCut(data),
 				this.createCircleSpace(data),
 				this.createCircleName(data),
@@ -171,6 +247,19 @@ var CircleListView = (function () {
 				data.genreFreeFormat
 			]
 		);
+	};
+
+	self.prototype.createCircleStar = function (data)
+	{
+		var label = $('<label></label>').addClass('circle_star');
+		var checkbox = $('<input />').attr('type', 'checkbox').prop('checked', this.starList.exists(data.id)).val(data.id).on('change', function (event) {
+			var checkbox = $(event.target);
+			this.starList.toggle(checkbox.prop('checked'), checkbox.val());
+		}.bind(this));
+		label.append(checkbox);
+		var span = $('<span></span>');
+		label.append(span);
+		return label;
 	};
 
 	self.prototype.createCircleCut = function (data)
@@ -239,12 +328,17 @@ var StateController = (function () {
 	var self = function ()
 	{
 		this.circleList = new CircleList();
-		this.circleListView = new CircleListView();
+		this.starList = new StarList();
+		this.circleListView = new CircleListView(this.starList);
 		this.circleSearch = new CircleSearch(this.circleListView);
 
 		this.circleList.getClearButton().click(function () {
 			this.circleListView.clear();
 			this.changeState('begin');
+		}.bind(this));
+
+		this.starList.getClearButton().click(function () {
+			this.circleListView.clearStars();
 		}.bind(this));
 	};
 

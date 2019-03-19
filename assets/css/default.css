@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 *
 {
 	box-sizing: border-box;
@@ -53,6 +55,24 @@ th
 {
 	font-weight: bold;
 	color: red;
+}
+
+.circle_star input[type="checkbox"]
+{
+	display: none;
+}
+
+.circle_star input[type="checkbox"] + span::after
+{
+	font-size: 1.5rem;
+	content: '☆';
+	color: silver;
+}
+
+.circle_star input[type="checkbox"]:checked + span::after
+{
+	content: '★';
+	color: gold;
 }
 
 .circle_cut
