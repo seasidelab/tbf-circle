@@ -103,10 +103,52 @@ var CircleListView = (function () {
 
 	self.dataAttr = new DataAttr('circle-list-view');
 
+	self.prototype.add = function (row)
+	{
+		var tr = $('<tr></tr>');
+		this.tbody.append(tr);
+
+		row.forEach(function (column) {
+			var td = $('<td></td>');
+			Util.isString(column) ? td.text(column) : td.append(column);
+			tr.append(td);
+		});
+	};
+
+	self.prototype.clear = function ()
+	{
+		this.tbody.empty();
+	};
+
+	self.prototype.update = function (count)
+	{
+		// 表示件数更新
+		this.countElement.text(count);
+		// 表示内容変更を通知
+		this.lazyLoad.notifyRegionChange();
+	};
+
+	self.prototype.filter = function (callback)
+	{
+		var visibleCount = 0;
+
+		this.tbody.find('tr').each(function () {
+			var tr = $(this);
+			var showOrHide = callback(tr);
+			tr.toggle(showOrHide);
+			if (showOrHide)
+			{
+				visibleCount++;
+			}
+		});
+
+		this.update(visibleCount);
+	};
+
 	self.prototype.load = function (circle)
 	{
 		// 再ドラッグ時に古いものが残らないよう空にしておく
-		this.tbody.empty();
+		this.clear();
 
 		circle.list.forEach(function (data) {
 			this.addData(data);
@@ -118,7 +160,7 @@ var CircleListView = (function () {
 
 	self.prototype.addData = function (data)
 	{
-		this.addRow
+		this.add
 		(
 			[
 				this.createCircleCut(data),
@@ -157,43 +199,6 @@ var CircleListView = (function () {
 			name = Util.createExternalLink(data.webSiteURL).append(name);
 		}
 		return name;
-	};
-
-	self.prototype.addRow = function (row)
-	{
-		var tr = $('<tr></tr>');
-		this.tbody.append(tr);
-
-		row.forEach(function (column) {
-			var td = $('<td></td>');
-			Util.isString(column) ? td.text(column) : td.append(column);
-			tr.append(td);
-		});
-	};
-
-	self.prototype.update = function (count)
-	{
-		// 表示件数更新
-		this.countElement.text(count);
-		// 表示内容変更を通知
-		this.lazyLoad.notifyRegionChange();
-	};
-
-	self.prototype.filter = function (callback)
-	{
-		var visibleCount = 0;
-
-		this.tbody.find('tr').each(function () {
-			var tr = $(this);
-			var showOrHide = callback(tr);
-			tr.toggle(showOrHide);
-			if (showOrHide)
-			{
-				visibleCount++;
-			}
-		});
-
-		this.update(visibleCount);
 	};
 
 	return self;
@@ -238,6 +243,7 @@ var StateController = (function () {
 		this.circleSearch = new CircleSearch(this.circleListView);
 
 		this.circleList.getClearButton().click(function () {
+			this.circleListView.clear();
 			this.changeState('begin');
 		}.bind(this));
 	};
