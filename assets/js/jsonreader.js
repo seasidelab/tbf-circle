@@ -34,6 +34,12 @@ var JSONReader = (function () {
 					}
 					catch (e)
 					{
+						// "Persistent storage maximum size reached" はスクリプトが停止してしまうので
+						// エラーの原因がすぐに分かるよう再 throw しておく
+						if (e instanceof DOMException)
+						{
+							throw e;
+						}
 						// 不正なフォーマット
 						deferred.reject(e.message);
 					}
