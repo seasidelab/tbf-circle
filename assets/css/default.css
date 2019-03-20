@@ -67,6 +67,7 @@ th
 	font-size: 1.5rem;
 	content: '☆';
 	color: silver;
+	cursor: pointer;
 }
 
 .circle_star input[type="checkbox"]:checked + span::after
