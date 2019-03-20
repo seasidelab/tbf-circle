@@ -7,6 +7,14 @@ var TechBookFest = (function () {
 
 	self.URL = 'https://techbookfest.org';
 
+	self.GENRES =
+	{
+		'software': 'ソフトウェア全般',
+		'hardware': 'ハードウェア全般',
+		'technology': '科学技術',
+		'other': 'その他'
+	};
+
 	self.getName = function (number)
 	{
 		return self.NAME + number;
@@ -35,6 +43,11 @@ var TechBookFest = (function () {
 	self.getCircleUrl = function (eventId, id)
 	{
 		return self.getHomeUrl(eventId) + '/circle/' + id;
+	};
+
+	self.resolveGenre = function (key)
+	{
+		return (key in self.GENRES) ? self.GENRES[key] : key;
 	};
 
 	return self;

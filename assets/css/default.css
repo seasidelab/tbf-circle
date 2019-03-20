@@ -93,3 +93,8 @@ th
 	background-color: #4caf50;
 	color: white;
 }
+
+.circle_genre
+{
+	white-space: nowrap;
+}

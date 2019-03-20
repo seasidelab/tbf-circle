@@ -243,7 +243,7 @@ var CircleListView = (function () {
 				this.createCircleSpace(data),
 				this.createCircleName(data),
 				data.penName,
-				data.genre,
+				this.createCircleGenre(data),
 				data.genreFreeFormat
 			]
 		);
@@ -288,6 +288,11 @@ var CircleListView = (function () {
 			name = Util.createExternalLink(data.webSiteURL).append(name);
 		}
 		return name;
+	};
+
+	self.prototype.createCircleGenre = function (data)
+	{
+		return $('<span></span>').addClass('circle_genre').text(TechBookFest.resolveGenre(data.genre));
 	};
 
 	return self;
