@@ -65,15 +65,14 @@ th
 .circle_star input[type="checkbox"] + span::after
 {
 	font-size: 1.5rem;
-	content: '☆';
-	color: silver;
+	color: gold;
 	cursor: pointer;
+	content: '☆';
 }
 
 .circle_star input[type="checkbox"]:checked + span::after
 {
 	content: '★';
-	color: gold;
 }
 
 .circle_cut
