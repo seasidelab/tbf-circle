@@ -270,7 +270,10 @@ var CircleListView = (function () {
 
 	self.prototype.createCircleSpace = function (data)
 	{
-		return Util.createExternalLink(TechBookFest.getCircleUrl(data.event.id, data.id)).addClass('circle_space').text(data.spaces.join('/'));
+		return Util.createExternalLink(TechBookFest.getCircleUrl(data.event.id, data.id))
+		.addClass('circle_space')
+		.css('background-color', TechBookFest.getCourceColor(data.eventExhibitCourse.id))
+		.text(data.spaces.join('/'));
 	};
 
 	self.prototype.createCircleName = function (data)

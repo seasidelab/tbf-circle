@@ -7,6 +7,14 @@ var TechBookFest = (function () {
 
 	self.URL = 'https://techbookfest.org';
 
+	self.COURCE_COLORS =
+	{
+		'1': '#c3f3ff',
+		'2': '#ffc3e3',
+		'3': '#ffeb77',
+		'4': '#4caf50'
+	};
+
 	self.GENRES =
 	{
 		'software': 'ソフトウェア全般',
@@ -43,6 +51,11 @@ var TechBookFest = (function () {
 	self.getCircleUrl = function (eventId, id)
 	{
 		return self.getHomeUrl(eventId) + '/circle/' + id;
+	};
+
+	self.getCourceColor = function (id)
+	{
+		return (self.COURCE_COLORS) ? self.COURCE_COLORS[id] : '';
 	};
 
 	self.resolveGenre = function (key)
