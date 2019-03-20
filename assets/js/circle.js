@@ -278,9 +278,7 @@ var CircleListView = (function () {
 
 	self.prototype.createCircleName = function (data)
 	{
-		var name = $('<ruby></ruby>').text(data.name);
-		var rt = $('<rt></rt>').text(data.nameRuby);
-		name.append(rt);
+		var name = $('<span></span>').attr('title', data.nameRuby).text(data.name);
 		// Web サイトがあればリンクする
 		if ('webSiteURL' in data)
 		{
