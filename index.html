@@ -15,11 +15,12 @@
 		<script src="assets/js/circle.js"></script>
 		<script>
 var setting = {};
-setting.number          = 6;	// 開催回数
-setting.titleText       = TechBookFest.getName(setting.number) + ' | サークルチェッカー';
-setting.limit           = 1000;
-setting.loadingImageUrl = 'assets/img/loading.gif';
-setting.storageKeys     = {'circle': 'circle', 'star': 'star'};
+setting.number           = 6;	// 開催回数
+setting.titleText        = TechBookFest.getName(setting.number) + ' | サークルチェッカー';
+setting.limit            = 1000;
+setting.loadingImageUrl  = 'assets/img/loading.gif';
+setting.dummyCutImageUrl = 'assets/img/dummy_cut.png';
+setting.storageKeys      = {'circle': 'circle', 'star': 'star'};
 
 $(function () {
 	StateController.run();

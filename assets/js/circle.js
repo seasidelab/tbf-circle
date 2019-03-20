@@ -264,12 +264,8 @@ var CircleListView = (function () {
 
 	self.prototype.createCircleCut = function (data)
 	{
-		if (!('circleCutImage' in data))
-		{
-			// サークルカットなし
-			return 'N/A';
-		}
-		return this.lazyLoad.createImage(setting.loadingImageUrl, data.circleCutImage.url).addClass('circle_cut');
+		var circleCutImageUrl = ('circleCutImage' in data) ? data.circleCutImage.url : setting.dummyCutImageUrl;
+		return this.lazyLoad.createImage(setting.loadingImageUrl, circleCutImageUrl).addClass('circle_cut');
 	};
 
 	self.prototype.createCircleSpace = function (data)
