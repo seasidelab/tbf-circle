@@ -99,3 +99,8 @@ th
 {
 	white-space: nowrap;
 }
+
+.circle_detail
+{
+	white-space: pre-wrap;
+}

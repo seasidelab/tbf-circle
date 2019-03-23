@@ -244,7 +244,7 @@ var CircleListView = (function () {
 				this.createCircleName(data),
 				data.penName,
 				this.createCircleGenre(data),
-				data.genreFreeFormat
+				this.createCircleDetail(data)
 			]
 		);
 	};
@@ -292,6 +292,19 @@ var CircleListView = (function () {
 		return $('<span></span>').addClass('circle_genre').text(TechBookFest.resolveGenre(data.genre));
 	};
 
+	self.prototype.createCircleDetail = function (data)
+	{
+		var text = data.genreFreeFormat;
+		// タグがあれば展開
+		if ('tags' in data)
+		{
+			text += '\n\n' + data.tags.map(function (tag) {
+				return '#' + tag;
+			}).join(' ');
+		}
+		return $('<div></div>').addClass('circle_detail').text(text);
+	};
+
 	return self;
 }());
 
@@ -313,7 +326,7 @@ var CircleSearch = (function () {
 	{
 		this.circleListView.filter(function (tr) {
 			var tds = tr.find('td');
-			return Util.partialMatch(tds.eq(CircleListView.COL_NUM_DETAIL).text(), keyword);
+			return Util.partialMatch(tds.eq(CircleListView.COL_NUM_DETAIL).find('.circle_detail').text(), keyword);
 		});
 	};
 
