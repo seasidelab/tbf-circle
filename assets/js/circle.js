@@ -122,42 +122,6 @@ var StarList = (function () {
 	return self;
 }());
 
-// 画像拡大表示
-var ImageZoom = (function () {
-	var self = function ()
-	{
-		this.element = self.dataAttr.find();
-		this.hide();
-	};
-
-	self.dataAttr = new DataAttr('image-zoom');
-
-	self.prototype.show = function (srcImage)
-	{
-		var destImage = $('<img />').attr('src', srcImage.attr('src'));
-		this.element.append(destImage).show();
-	};
-
-	self.prototype.hide = function ()
-	{
-		this.element.hide().empty();
-	};
-
-	self.prototype.set = function (selector)
-	{
-		$(selector)
-		.mouseover(function (event) {
-			var srcImage = $(event.currentTarget);
-			this.show(srcImage);
-		}.bind(this))
-		.mouseout(function () {
-			this.hide();
-		}.bind(this));
-	};
-
-	return self;
-}());
-
 // サークルリスト表示
 var CircleListView = (function () {
 	var self = function (starList)
@@ -165,7 +129,7 @@ var CircleListView = (function () {
 		this.tbody = self.dataAttr.find('table').find('tbody');
 		this.countElement = self.dataAttr.find('count');
 		this.lazyLoad = new LazyLoad();
-		this.imageZoom = new ImageZoom();
+		this.previewImage = new PreviewImage();
 		this.starList = starList;
 	};
 
@@ -229,7 +193,7 @@ var CircleListView = (function () {
 			this.addData(data);
 		}.bind(this));
 
-		this.imageZoom.set('.circle_cut');
+		this.previewImage.set('.circle_cut');
 		this.update(circle.list.length);
 	};
 

@@ -39,16 +39,17 @@ th
 	display: none;
 }
 
-[data-image-zoom]
+[data-preview-image="container"]
 {
-	position: fixed;
 	right: 0;
 	top: 0;
 	height: 100%;
 }
 
-[data-image-zoom] img
+[data-preview-image="content"]
 {
+	right: 0;
+	top: 0;
 	height: 100%;
 }
 
