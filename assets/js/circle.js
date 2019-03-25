@@ -2,6 +2,8 @@
 var CircleList = (function () {
 	var self = function ()
 	{
+		this.observable = new Observable(this);
+
 		this.jsonStorage = new JSONStorage(setting.storageKeys.circle);
 
 		// クリアボタンの取得と状態更新
@@ -17,6 +19,11 @@ var CircleList = (function () {
 	};
 
 	self.dataAttr = new DataAttr('circle-list');
+
+	self.prototype.addListener = function (type, listener)
+	{
+		this.observable.add(type, listener);
+	};
 
 	self.prototype.exists = function ()
 	{
@@ -38,16 +45,12 @@ var CircleList = (function () {
 	{
 		this.jsonStorage.clear();
 		this.updateClearButton();
+		this.observable.notify('clear');
 	};
 
 	self.prototype.updateClearButton = function ()
 	{
 		this.clearButton.toggle(this.exists());
-	};
-
-	self.prototype.getClearButton = function ()
-	{
-		return this.clearButton;
 	};
 
 	return self;
@@ -57,6 +60,8 @@ var CircleList = (function () {
 var StarList = (function () {
 	var self = function ()
 	{
+		this.observable = new Observable(this);
+
 		this.jsonStorage = new JSONStorage(setting.storageKeys.star);
 		this.circleIds = this.jsonStorage.exists() ? this.jsonStorage.get() : {};
 
@@ -68,6 +73,11 @@ var StarList = (function () {
 	};
 
 	self.dataAttr = new DataAttr('star-list');
+
+	self.prototype.addListener = function (type, listener)
+	{
+		this.observable.add(type, listener);
+	};
 
 	self.prototype.size = function ()
 	{
@@ -102,9 +112,10 @@ var StarList = (function () {
 		this.circleIds = {};
 		this.jsonStorage.clear();
 		this.updateClearButton();
+		this.observable.notify('clear');
 	};
 
-	self.prototype.toggle = function (addOrRemove, circleId)
+	self.prototype.toggle = function (circleId, addOrRemove)
 	{
 		addOrRemove ? this.add(circleId) : this.remove(circleId);
 	};
@@ -114,28 +125,29 @@ var StarList = (function () {
 		this.clearButton.toggle(this.jsonStorage.exists());
 	};
 
-	self.prototype.getClearButton = function ()
-	{
-		return this.clearButton;
-	};
-
 	return self;
 }());
 
 // サークルリスト表示
 var CircleListView = (function () {
-	var self = function (starList)
+	var self = function ()
 	{
+		this.observable = new Observable(this);
+
 		this.tbody = self.dataAttr.find('table').find('tbody');
 		this.countElement = self.dataAttr.find('count');
 		this.lazyLoad = new LazyLoad();
 		this.previewImage = new PreviewImage();
-		this.starList = starList;
 	};
 
 	self.COL_NUM_DETAIL = 6;
 
 	self.dataAttr = new DataAttr('circle-list-view');
+
+	self.prototype.addListener = function (type, listener)
+	{
+		this.observable.add(type, listener);
+	};
 
 	self.prototype.add = function (row)
 	{
@@ -184,25 +196,25 @@ var CircleListView = (function () {
 		this.tbody.find('.circle_star input[type="checkbox"]').prop('checked', false);
 	};
 
-	self.prototype.load = function (circle)
+	self.prototype.load = function (circle, starList)
 	{
 		// 再ドラッグ時に古いものが残らないよう空にしておく
 		this.clear();
 
 		circle.list.forEach(function (data) {
-			this.addData(data);
+			this.addData(data, starList);
 		}.bind(this));
 
 		this.previewImage.set('.circle_cut');
 		this.update(circle.list.length);
 	};
 
-	self.prototype.addData = function (data)
+	self.prototype.addData = function (data, starList)
 	{
 		this.add
 		(
 			[
-				this.createCircleStar(data),
+				this.createCircleStar(data, starList),
 				this.createCircleCut(data),
 				this.createCircleSpace(data),
 				this.createCircleName(data),
@@ -213,12 +225,12 @@ var CircleListView = (function () {
 		);
 	};
 
-	self.prototype.createCircleStar = function (data)
+	self.prototype.createCircleStar = function (data, starList)
 	{
 		var label = $('<label></label>').addClass('circle_star');
-		var checkbox = $('<input />').attr('type', 'checkbox').prop('checked', this.starList.exists(data.id)).val(data.id).on('change', function (event) {
+		var checkbox = $('<input />').attr('type', 'checkbox').prop('checked', starList.exists(data.id)).val(data.id).on('change', function (event) {
 			var checkbox = $(event.target);
-			this.starList.toggle(checkbox.prop('checked'), checkbox.val());
+			this.observable.notify('check', checkbox.val(), checkbox.prop('checked'));
 		}.bind(this));
 		label.append(checkbox);
 		var span = $('<span></span>');
@@ -274,9 +286,9 @@ var CircleListView = (function () {
 
 // サークル検索
 var CircleSearch = (function () {
-	var self = function (circleListView)
+	var self = function ()
 	{
-		this.circleListView = circleListView;
+		this.observable = new Observable(this);
 
 		this.input = self.dataAttr.find();
 		this.input.on('input', function () {
@@ -286,17 +298,14 @@ var CircleSearch = (function () {
 
 	self.dataAttr = new DataAttr('circle-search');
 
-	self.prototype.filter = function (keyword)
+	self.prototype.addListener = function (type, listener)
 	{
-		this.circleListView.filter(function (tr) {
-			var tds = tr.find('td');
-			return Util.partialMatch(tds.eq(CircleListView.COL_NUM_DETAIL).find('.circle_detail').text(), keyword);
-		});
+		this.observable.add(type, listener);
 	};
 
 	self.prototype.execute = function ()
 	{
-		this.filter(this.input.val());
+		this.observable.notify('change', this.input.val());
 	};
 
 	return self;
@@ -306,18 +315,33 @@ var CircleSearch = (function () {
 var StateController = (function () {
 	var self = function ()
 	{
-		this.circleList = new CircleList();
-		this.starList = new StarList();
-		this.circleListView = new CircleListView(this.starList);
-		this.circleSearch = new CircleSearch(this.circleListView);
+		this.circleList     = new CircleList();
+		this.starList       = new StarList();
+		this.circleListView = new CircleListView();
+		this.circleSearch   = new CircleSearch();
 
-		this.circleList.getClearButton().click(function () {
+		this.circleList.addListener('clear', function () {
+			// JSON キャッシュが削除されたらリストをクリアして初期状態に戻す
 			this.circleListView.clear();
 			this.changeState('begin');
 		}.bind(this));
 
-		this.starList.getClearButton().click(function () {
+		this.starList.addListener('clear', function () {
+			// ストレージのスターが削除されたらリストの全スターをオフにする
 			this.circleListView.clearStars();
+		}.bind(this));
+
+		this.circleListView.addListener('check', function (circleId, isChecked) {
+			// リストのスターが変更されたらストレージにも反映
+			this.starList.toggle(circleId, isChecked);
+		}.bind(this));
+
+		this.circleSearch.addListener('change', function (keyword) {
+			// 検索条件が変更されたらリストをフィルター
+			this.circleListView.filter(function (tr) {
+				var tds = tr.find('td');
+				return Util.partialMatch(tds.eq(CircleListView.COL_NUM_DETAIL).find('.circle_detail').text(), keyword);
+			});
 		}.bind(this));
 	};
 
@@ -388,7 +412,7 @@ var StateController = (function () {
 
 	self.prototype.stateSuccess = function (circle)
 	{
-		this.circleListView.load(circle);
+		this.circleListView.load(circle, this.starList);
 		this.circleSearch.execute();
 	};
 
