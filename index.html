@@ -43,7 +43,12 @@ $(function () {
 		</section>
 		<section data-state="success">
 			<h2>検索</h2>
-			<p><label>🔎<input type="search" placeholder="詳細検索" data-circle-search></label></p>
+			<form data-circle-search>
+				<ul>
+					<li><label><input type="checkbox" name="star">スター限定</label></li>
+					<li><label>詳細<input type="text" name="keyword"></li>
+				</ul>
+			</form>
 			<h2>サークルリスト (<span data-circle-list-view="count"></span>)</h2>
 			<table data-circle-list-view="table">
 				<thead>

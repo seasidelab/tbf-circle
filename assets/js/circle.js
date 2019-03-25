@@ -140,6 +140,7 @@ var CircleListView = (function () {
 		this.previewImage = new PreviewImage();
 	};
 
+	self.COL_NUM_STAR   = 0;
 	self.COL_NUM_DETAIL = 6;
 
 	self.dataAttr = new DataAttr('circle-list-view');
@@ -290,8 +291,15 @@ var CircleSearch = (function () {
 	{
 		this.observable = new Observable(this);
 
-		this.input = self.dataAttr.find();
-		this.input.on('input', function () {
+		var form = self.dataAttr.find();
+
+		this.starCheckbox = form.find('[name="star"]');
+		this.starCheckbox.on('change', function () {
+			this.execute();
+		}.bind(this));
+
+		this.keywordInput = form.find('[name="keyword"]');
+		this.keywordInput.on('input', function () {
 			this.execute();
 		}.bind(this));
 	};
@@ -305,7 +313,7 @@ var CircleSearch = (function () {
 
 	self.prototype.execute = function ()
 	{
-		this.observable.notify('change', this.input.val());
+		this.observable.notify('change', this.starCheckbox.prop('checked'), this.keywordInput.val());
 	};
 
 	return self;
@@ -329,18 +337,30 @@ var StateController = (function () {
 		this.starList.addListener('clear', function () {
 			// ストレージのスターが削除されたらリストの全スターをオフにする
 			this.circleListView.clearStars();
+			// 検索対象の状態が変化したので再検索
+			this.circleSearch.execute();
 		}.bind(this));
 
 		this.circleListView.addListener('check', function (circleId, isChecked) {
 			// リストのスターが変更されたらストレージにも反映
 			this.starList.toggle(circleId, isChecked);
+			// 検索対象の状態が変化したので再検索
+			this.circleSearch.execute();
 		}.bind(this));
 
-		this.circleSearch.addListener('change', function (keyword) {
+		this.circleSearch.addListener('change', function (isStarChecked, keyword) {
 			// 検索条件が変更されたらリストをフィルター
 			this.circleListView.filter(function (tr) {
 				var tds = tr.find('td');
-				return Util.partialMatch(tds.eq(CircleListView.COL_NUM_DETAIL).find('.circle_detail').text(), keyword);
+				if (isStarChecked && !tds.eq(CircleListView.COL_NUM_STAR).find('input').prop('checked'))
+				{
+					return false;
+				}
+				if (!Util.partialMatch(tds.eq(CircleListView.COL_NUM_DETAIL).find('.circle_detail').text(), keyword))
+				{
+					return false;
+				}
+				return true;
 			});
 		}.bind(this));
 	};

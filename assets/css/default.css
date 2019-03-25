@@ -59,6 +59,23 @@ th
 	color: red;
 }
 
+[data-circle-search] ul
+{
+	padding: 0;
+	list-style-type: none;
+}
+
+[data-circle-search] li
+{
+	display: inline;
+	margin-left: 2rem;
+}
+
+[data-circle-search] li:first-of-type
+{
+	margin-left: 0;
+}
+
 .circle_star input[type="checkbox"]
 {
 	display: none;
