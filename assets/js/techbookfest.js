@@ -55,7 +55,7 @@ var TechBookFest = (function () {
 
 	self.getCourceColor = function (id)
 	{
-		return (self.COURCE_COLORS) ? self.COURCE_COLORS[id] : '';
+		return (id in self.COURCE_COLORS) ? self.COURCE_COLORS[id] : '';
 	};
 
 	self.resolveGenre = function (key)
