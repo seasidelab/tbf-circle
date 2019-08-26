@@ -1,5 +1,5 @@
 var SafeStorage = (function () {
-	var self = function ()
+	let self = function ()
 	{
 	};
 

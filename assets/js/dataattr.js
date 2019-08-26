@@ -1,12 +1,12 @@
 var DataAttr = (function () {
-	var self = function (attributeName)
+	let self = function (attributeName)
 	{
 		this.attributeName = 'data-' + attributeName;
 	};
 
 	self.prototype.selector = function (value)
 	{
-		var expression = this.attributeName;
+		let expression = this.attributeName;
 		if (value !== undefined)
 		{
 			expression += '="' + value + '"';

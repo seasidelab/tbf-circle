@@ -1,5 +1,5 @@
 var TechBookFest = (function () {
-	var self = function ()
+	let self = function ()
 	{
 	};
 

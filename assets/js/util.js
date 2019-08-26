@@ -1,5 +1,5 @@
 var Util = (function () {
-	var self = function ()
+	let self = function ()
 	{
 	};
 
@@ -24,7 +24,7 @@ var Util = (function () {
 
 		if (string.length < length)
 		{
-			var zero = '';
+			let zero = '';
 			for (width = length - string.length; width > 0; width--)
 			{
 				zero += '0';

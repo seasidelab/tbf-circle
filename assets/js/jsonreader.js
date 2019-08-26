@@ -1,13 +1,13 @@
 var JSONReader = (function () {
-	var self = function ()
+	let self = function ()
 	{
 	};
 
 	self.read = function (dataTransfer)
 	{
-		var deferred = $.Deferred();
+		let deferred = $.Deferred();
 
-		var files = dataTransfer.files;
+		let files = dataTransfer.files;
 		if (files.length === 0)
 		{
 			// ファイル以外
@@ -15,7 +15,7 @@ var JSONReader = (function () {
 		}
 		else
 		{
-			var file = files[0];
+			let file = files[0];
 			if (file.type != 'application/json' && file.name.match(/\.json$/) === null)	// 拡張子による判定は IE 対策
 			{
 				// JSON 以外
@@ -23,13 +23,13 @@ var JSONReader = (function () {
 			}
 			else
 			{
-				var reader = new FileReader();
+				let reader = new FileReader();
 				reader.onload = function (event)
 				{
 					try
 					{
-						var text = event.target.result;
-						var object = JSON.parse(text);
+						let text = event.target.result;
+						let object = JSON.parse(text);
 						deferred.resolve(object);
 					}
 					catch (e)
@@ -46,7 +46,7 @@ var JSONReader = (function () {
 				};
 				reader.onerror = function (event)
 				{
-					var error = event.target.error;
+					let error = event.target.error;
 					// その他読み込みエラー
 					deferred.reject(error.name + ': ' + error.message);
 				};

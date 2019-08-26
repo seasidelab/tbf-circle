@@ -1,6 +1,6 @@
 // サークルリスト
 var CircleList = (function () {
-	var self = function ()
+	let self = function ()
 	{
 		this.observable = new Observable(this);
 
@@ -13,8 +13,8 @@ var CircleList = (function () {
 		this.updateClearButton();
 
 		// ダウンロードリンク追加
-		var jsonUrl = TechBookFest.getJSONUrl(setting.number, setting.limit);
-		var anchor = Util.createExternalLink(jsonUrl).text(jsonUrl);
+		let jsonUrl = TechBookFest.getJSONUrl(setting.number, setting.limit);
+		let anchor = Util.createExternalLink(jsonUrl).text(jsonUrl);
 		self.dataAttr.find('link').append(anchor);
 	};
 
@@ -58,7 +58,7 @@ var CircleList = (function () {
 
 // スター
 var StarList = (function () {
-	var self = function ()
+	let self = function ()
 	{
 		this.observable = new Observable(this);
 
@@ -130,7 +130,7 @@ var StarList = (function () {
 
 // サークルリスト表示
 var CircleListView = (function () {
-	var self = function ()
+	let self = function ()
 	{
 		this.observable = new Observable(this);
 
@@ -152,11 +152,11 @@ var CircleListView = (function () {
 
 	self.prototype.add = function (row)
 	{
-		var tr = $('<tr></tr>');
+		let tr = $('<tr></tr>');
 		this.tbody.append(tr);
 
 		row.forEach(function (column) {
-			var td = $('<td></td>');
+			let td = $('<td></td>');
 			Util.isString(column) ? td.text(column) : td.append(column);
 			tr.append(td);
 		});
@@ -177,11 +177,11 @@ var CircleListView = (function () {
 
 	self.prototype.filter = function (callback)
 	{
-		var visibleCount = 0;
+		let visibleCount = 0;
 
 		this.tbody.find('tr').each(function () {
-			var tr = $(this);
-			var showOrHide = callback(tr);
+			let tr = $(this);
+			let showOrHide = callback(tr);
 			tr.toggle(showOrHide);
 			if (showOrHide)
 			{
@@ -228,20 +228,20 @@ var CircleListView = (function () {
 
 	self.prototype.createCircleStar = function (data, starList)
 	{
-		var label = $('<label></label>').addClass('circle_star');
-		var checkbox = $('<input />').attr('type', 'checkbox').prop('checked', starList.exists(data.id)).val(data.id).on('change', function (event) {
-			var checkbox = $(event.target);
+		let label = $('<label></label>').addClass('circle_star');
+		let checkbox = $('<input />').attr('type', 'checkbox').prop('checked', starList.exists(data.id)).val(data.id).on('change', function (event) {
+			let checkbox = $(event.target);
 			this.observable.notify('check', checkbox.val(), checkbox.prop('checked'));
 		}.bind(this));
 		label.append(checkbox);
-		var span = $('<span></span>');
+		let span = $('<span></span>');
 		label.append(span);
 		return label;
 	};
 
 	self.prototype.createCircleCut = function (data)
 	{
-		var circleCutImageUrl = ('circleCutImage' in data) ? data.circleCutImage.url : setting.dummyCutImageUrl;
+		let circleCutImageUrl = ('circleCutImage' in data) ? data.circleCutImage.url : setting.dummyCutImageUrl;
 		return this.lazyLoad.createImage(setting.loadingImageUrl, circleCutImageUrl).addClass('circle_cut');
 	};
 
@@ -255,7 +255,7 @@ var CircleListView = (function () {
 
 	self.prototype.createCircleName = function (data)
 	{
-		var name = $('<span></span>').attr('title', data.nameRuby).text(data.name);
+		let name = $('<span></span>').attr('title', data.nameRuby).text(data.name);
 		// Web サイトがあればリンクする
 		if ('webSiteURL' in data)
 		{
@@ -271,7 +271,7 @@ var CircleListView = (function () {
 
 	self.prototype.createCircleDetail = function (data)
 	{
-		var text = data.genreFreeFormat;
+		let text = data.genreFreeFormat;
 		// タグがあれば展開
 		if ('tags' in data)
 		{
@@ -287,11 +287,11 @@ var CircleListView = (function () {
 
 // サークル検索
 var CircleSearch = (function () {
-	var self = function ()
+	let self = function ()
 	{
 		this.observable = new Observable(this);
 
-		var form = self.dataAttr.find();
+		let form = self.dataAttr.find();
 
 		this.starCheckbox = form.find('[name="star"]');
 		this.starCheckbox.on('change', function () {
@@ -321,7 +321,7 @@ var CircleSearch = (function () {
 
 // メイン処理
 var StateController = (function () {
-	var self = function ()
+	let self = function ()
 	{
 		this.circleList     = new CircleList();
 		this.starList       = new StarList();
@@ -351,7 +351,7 @@ var StateController = (function () {
 		this.circleSearch.addListener('change', function (isStarChecked, keyword) {
 			// 検索条件が変更されたらリストをフィルター
 			this.circleListView.filter(function (tr) {
-				var tds = tr.find('td');
+				let tds = tr.find('td');
 				if (isStarChecked && !tds.eq(CircleListView.COL_NUM_STAR).find('input').prop('checked'))
 				{
 					return false;
@@ -369,7 +369,7 @@ var StateController = (function () {
 
 	self.run = function ()
 	{
-		var instance = new self();
+		let instance = new self();
 		instance.initialize();
 		instance.changeState('begin');
 	};
@@ -381,9 +381,9 @@ var StateController = (function () {
 		self.dataAttr.find(stateName).show();
 
 		// メソッド名確定
-		var methodName = 'state' + Util.upperCaseFirst(stateName);
+		let methodName = 'state' + Util.upperCaseFirst(stateName);
 		// 引数を引き継ぐ
-		var args = Array.prototype.slice.call(arguments, 1);
+		let args = Array.prototype.slice.call(arguments, 1);
 		// 状態に応じたメソッドを呼び出し
 		this[methodName].apply(this, args);
 	};

@@ -1,5 +1,5 @@
 var JSONStorage = (function () {
-	var self = function (key)
+	let self = function (key)
 	{
 		this.key = key;
 	};
