@@ -1,4 +1,4 @@
-var JSONReader = (function () {
+var JsonReader = (function () {
 	let self = function ()
 	{
 	};

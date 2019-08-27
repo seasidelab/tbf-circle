@@ -1,4 +1,4 @@
-var JSONStorage = (function () {
+var JsonStorage = (function () {
 	let self = function (key)
 	{
 		this.key = key;

@@ -33,7 +33,7 @@ var TechBookFest = (function () {
 		return 'tbf' + Util.zeroPadding(number, 2);
 	};
 
-	self.getJSONUrl = function (number, limit)
+	self.getJsonUrl = function (number, limit)
 	{
 		return self.URL + '/api/circle?' + $.param({
 			'eventID': self.getEventId(number),

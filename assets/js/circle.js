@@ -4,7 +4,7 @@ var CircleList = (function () {
 	{
 		this.observable = new Observable(this);
 
-		this.jsonStorage = new JSONStorage(setting.storageKeys.circle);
+		this.jsonStorage = new JsonStorage(setting.storageKeys.circle);
 
 		// クリアボタンの取得と状態更新
 		this.clearButton = self.dataAttr.find('clear').click(function () {
@@ -13,7 +13,7 @@ var CircleList = (function () {
 		this.updateClearButton();
 
 		// ダウンロードリンク追加
-		let jsonUrl = TechBookFest.getJSONUrl(setting.number, setting.limit);
+		let jsonUrl = TechBookFest.getJsonUrl(setting.number, setting.limit);
 		let anchor = Util.createExternalLink(jsonUrl).text(jsonUrl);
 		self.dataAttr.find('link').append(anchor);
 	};
@@ -62,7 +62,7 @@ var StarList = (function () {
 	{
 		this.observable = new Observable(this);
 
-		this.jsonStorage = new JSONStorage(setting.storageKeys.star);
+		this.jsonStorage = new JsonStorage(setting.storageKeys.star);
 		this.circleIds = this.jsonStorage.exists() ? this.jsonStorage.get() : {};
 
 		// クリアボタンの取得と状態更新
@@ -417,7 +417,7 @@ var StateController = (function () {
 	self.prototype.stateLoading = function (dataTransfer)
 	{
 		$('html').addClass('loading');	// ロード中カーソル設定
-		JSONReader.read(dataTransfer)
+		JsonReader.read(dataTransfer)
 		.done(function (circle) {
 			this.circleList.set(circle);
 			this.changeState('success', circle);
