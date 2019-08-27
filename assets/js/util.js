@@ -25,7 +25,7 @@ var Util = (function () {
 		if (string.length < length)
 		{
 			let zero = '';
-			for (width = length - string.length; width > 0; width--)
+			for (let width = length - string.length; width > 0; width--)
 			{
 				zero += '0';
 			}
